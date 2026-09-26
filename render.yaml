@@ -1,0 +1,54 @@
+services:
+  - type: web
+    name: healthflow-api
+    runtime: docker
+    rootDir: backend/Healthcare.Api
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /health
+    envVars:
+      - key: ConnectionStrings__DefaultConnection
+        sync: false
+      - key: Jwt__Issuer
+        value: Healthcare.Api
+      - key: Jwt__Audience
+        value: Healthcare.Angular
+      - key: Jwt__Key
+        sync: false
+      - key: FrontendUrl
+        sync: false
+      - key: Payment__Mode
+        value: Mock
+      - key: Seed__DemoData
+        value: false
+      - key: Smtp__Host
+        sync: false
+      - key: Smtp__Port
+        value: 587
+      - key: Smtp__User
+        sync: false
+      - key: Smtp__Password
+        sync: false
+      - key: Smtp__From
+        sync: false
+      - key: Smtp__EnableSsl
+        value: true
+      - key: Seed__SuperAdminName
+        sync: false
+      - key: Seed__SuperAdminEmail
+        sync: false
+      - key: Seed__SuperAdminPassword
+        sync: false
+
+  - type: web
+    name: healthflow-web
+    runtime: static
+    rootDir: frontend
+    buildCommand: npm ci && npm run build:render
+    staticPublishPath: ./dist/healthflow-angular/browser
+    envVars:
+      - key: API_URL
+        sync: false
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html

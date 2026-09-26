@@ -1,0 +1,18 @@
+# Visual Studio
+.vs/
+**/.vs/
+bin/
+obj/
+
+# Angular / Node
+node_modules/
+dist/
+.angular/
+
+# User-specific Visual Studio files
+*.user
+*.suo
+
+# Secrets / env
+.env
+.env.*
