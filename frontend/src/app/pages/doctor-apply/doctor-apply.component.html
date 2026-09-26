@@ -1,0 +1,15 @@
+<section class="form-shell">
+  <p class="eyebrow">Doctor onboarding</p><h2>Apply to join the clinical network.</h2><p class="muted">Applications stay pending until an admin verifies and approves the profile.</p>
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <div class="grid grid-2"><div class="field"><label>Name</label><input formControlName="name"></div><div class="field"><label>Email</label><input formControlName="email"></div></div>
+    <div class="field"><label>Password</label><input type="password" formControlName="password"></div>
+    <div class="row"><button type="button" class="btn btn-soft" (click)="sendOtp()">Send OTP</button></div>
+    @if(sent){<div class="field"><label>OTP</label><input formControlName="otp"></div>}
+    <div class="grid grid-2"><div class="field"><label>License number</label><input formControlName="licenseNumber"></div><div class="field"><label>Specialization</label><input formControlName="specialization"></div></div>
+    <div class="field"><label>Qualifications</label><input formControlName="qualifications"></div>
+    <div class="grid grid-2"><div class="field"><label>Experience (years)</label><input type="number" formControlName="experienceYears"></div><div class="field"><label>Consultation fee (BDT)</label><input type="number" formControlName="consultationFee"></div></div>
+    <div class="field"><label>Short bio</label><textarea rows="4" formControlName="bio"></textarea></div>
+    @if(message){<p class="success">{{message}}</p>} @if(error){<p class="error">{{error}}</p>}
+    <button class="btn btn-primary" style="width:100%" [disabled]="loading||!sent">Submit application</button>
+  </form>
+</section>

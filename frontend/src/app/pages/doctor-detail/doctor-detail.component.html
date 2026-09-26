@@ -1,0 +1,44 @@
+<section class="detail-hero">
+  <div class="container">
+    @if (loading) { <p>Loading doctor profile…</p> }
+    @if (error) { <p class="error">{{ error }}</p> }
+    @if (doctor) {
+      <div class="profile-grid">
+        <div class="portrait">
+          @if (doctor.imageUrl) { <img [src]="doctor.imageUrl" [alt]="doctor.name"> }
+          @else { <div class="placeholder">{{ initials(doctor.name) }}</div> }
+        </div>
+        <div class="profile-copy">
+          <p class="eyebrow">{{ doctor.specialization }}</p>
+          <h1>{{ doctor.name }}</h1>
+          <p class="qualification">{{ doctor.qualifications || 'Verified HealthFlow clinician' }}</p>
+          <div class="facts"><span>{{ doctor.experienceYears }} years experience</span><span>★ {{ (doctor.averageRating || 0).toFixed(1) }}</span><span>{{ doctor.reviewCount || 0 }} reviews</span></div>
+          <p class="bio">{{ doctor.bio || 'Approved clinician providing patient-centered consultation through HealthFlow.' }}</p>
+          <div class="fee"><span>Consultation fee</span><strong>৳{{ doctor.consultationFee }}</strong></div>
+          <div class="actions"><a class="btn btn-primary" [routerLink]="['/book', doctor.id]">Book an Appointment</a><a class="btn btn-soft" routerLink="/doctors">Back to doctors</a></div>
+        </div>
+      </div>
+    }
+  </div>
+</section>
+
+@if (doctor) {
+<section class="section">
+  <div class="container two-col">
+    <div>
+      <p class="eyebrow">Profile</p><h2>About the doctor</h2>
+      <div class="info-card"><h3>Clinical focus</h3><p>{{ doctor.bio || 'General consultation and evidence-based follow-up care.' }}</p></div>
+      <div class="info-card"><h3>Qualifications</h3><p>{{ doctor.qualifications || 'Verified professional credentials reviewed by HealthFlow.' }}</p></div>
+    </div>
+    <div>
+      <p class="eyebrow">Upcoming availability</p><h2>Published schedules</h2>
+      @if (!schedules.length) { <div class="info-card"><p class="muted">No published schedule is available in the next 30 days.</p></div> }
+      <div class="schedule-list">
+        @for (s of schedules.slice(0, 6); track s.id) {
+          <div class="schedule-row"><div><strong>{{ dateLabel(s.date) }}</strong><span>{{ s.startTime }} – {{ s.endTime }}</span></div><span class="slot-badge">{{ s.availableSlots }} slots</span></div>
+        }
+      </div>
+    </div>
+  </div>
+</section>
+}

@@ -1,0 +1,86 @@
+@if (service) {
+  <section class="service-hero">
+    <div class="container hero-grid">
+      <div>
+        <p class="eyebrow">{{ service.eyebrow }}</p>
+        <h1>{{ service.title }}</h1>
+        <p class="lead">{{ service.summary }}</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" routerLink="/doctors">{{ service.cta }}</a>
+          <a class="btn btn-soft" routerLink="/">Back to home</a>
+        </div>
+      </div>
+      <aside class="hero-card">
+        <span class="hero-icon">✚</span>
+        <p>HealthFlow service</p>
+        <strong>Simple access to approved clinicians and appointment scheduling.</strong>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container intro-grid">
+      <div>
+        <p class="eyebrow">About this service</p>
+        <h2>Care, organised around your next step.</h2>
+      </div>
+      <p class="description">{{ service.description }}</p>
+    </div>
+  </section>
+
+  <section class="section soft-section">
+    <div class="container">
+      <p class="eyebrow">What is included</p>
+      <h2>Service highlights</h2>
+      <div class="feature-grid">
+        @for (item of service.includes; track item) {
+          <article class="feature-card">
+            <span class="check">✓</span>
+            <p>{{ item }}</p>
+          </article>
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <p class="eyebrow">How it works</p>
+      <h2>Book in three simple steps.</h2>
+      <div class="steps-grid">
+        @for (step of service.steps; track step.title; let i = $index) {
+          <article class="step-card">
+            <span class="step-number">0{{ i + 1 }}</span>
+            <h3>{{ step.title }}</h3>
+            <p>{{ step.text }}</p>
+          </article>
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section suitable-section">
+    <div class="container suitable-grid">
+      <div>
+        <p class="eyebrow">Who it may help</p>
+        <h2>Designed for straightforward access to care.</h2>
+      </div>
+      <div class="suitable-list">
+        @for (item of service.suitableFor; track item) {
+          <div><span>•</span>{{ item }}</div>
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container final-cta">
+      <div>
+        <p class="eyebrow">Ready to continue?</p>
+        <h2>Find an available doctor.</h2>
+        <p class="muted">Browse approved clinicians and choose a published appointment schedule.</p>
+      </div>
+      <a class="btn btn-dark" routerLink="/doctors">View doctors</a>
+    </div>
+  </section>
+}

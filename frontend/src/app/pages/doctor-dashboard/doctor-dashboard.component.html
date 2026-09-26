@@ -1,0 +1,21 @@
+<section class="section"><div class="container">
+  <div class="page-head"><div><p class="eyebrow">Doctor studio</p><h2>Run today with less admin.</h2><p class="muted">Publish availability, move consultations through the lifecycle, and send prescriptions.</p></div></div>
+  @if(message){<p class="success">{{message}}</p>} @if(error){<p class="error">{{error}}</p>}
+  <div class="grid grid-2">
+    <article class="card"><h3>Create schedule</h3>
+      <div class="field"><label>Date</label><input type="date" [(ngModel)]="schedule.date"></div>
+      <div class="grid grid-2"><div class="field"><label>Start</label><input type="time" [(ngModel)]="schedule.startTime"></div><div class="field"><label>End</label><input type="time" [(ngModel)]="schedule.endTime"></div></div>
+      <div class="field"><label>Meet link</label><input [(ngModel)]="schedule.meetLink"></div><button class="btn btn-primary" (click)="create()">Save draft</button>
+    </article>
+    <article class="card"><h3>Your schedules</h3>
+      @for(s of schedules;track s.id){<div style="padding:12px 0;border-bottom:1px solid var(--line)"><div class="row" style="justify-content:space-between"><b>{{s.date}} · {{s.startTime}}–{{s.endTime}}</b><span class="badge">{{s.status}}</span></div><p class="muted">{{s.bookedSlots}} / {{s.totalSlots}} booked</p>@if(s.status==='Draft'){<button class="btn btn-soft" (click)="publish(s.id)">Publish</button>}</div>}
+    </article>
+  </div>
+  <div class="page-head" style="margin-top:56px"><div><p class="eyebrow">Consultation queue</p><h2>Appointments</h2></div></div>
+  <div class="grid grid-2">
+    @for(a of appointments;track a.id){<article class="card"><div class="row" style="justify-content:space-between"><span class="badge">{{a.status}}</span><b>#{{a.serialNumber}}</b></div><h3>{{a.patient}}</h3><p class="muted">{{a.email}}</p><p>{{a.reason||'No visit reason provided.'}}</p>
+      <div class="row">@if(a.status==='Booked'){<button class="btn btn-primary" (click)="status(a.id,'Ongoing')">Start consultation</button>} @if(a.status==='Ongoing'){<button class="btn btn-primary" (click)="status(a.id,'Completed')">Mark completed</button>}</div>
+      @if(a.status==='Completed'){<div style="margin-top:18px"><div class="field"><label>Findings</label><textarea [(ngModel)]="rx[a.id].findings"></textarea></div><div class="field"><label>Medicines</label><textarea [(ngModel)]="rx[a.id].medicines"></textarea></div><div class="field"><label>Advice</label><textarea [(ngModel)]="rx[a.id].advice"></textarea></div><button class="btn btn-soft" (click)="prescribe(a.id)">Send prescription</button></div>}
+    </article>}
+  </div>
+</div></section>

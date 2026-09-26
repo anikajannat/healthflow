@@ -1,0 +1,12 @@
+<section class="form-shell">
+  <p class="eyebrow">Patient registration</p><h2>Your care account, in minutes.</h2>
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <div class="field"><label>Full name</label><input formControlName="name" placeholder="Your name"></div>
+    <div class="field"><label>Email</label><input formControlName="email" type="email" placeholder="you@example.com"></div>
+    <div class="field"><label>Password</label><input formControlName="password" type="password" placeholder="Minimum 8 characters"></div>
+    <div class="row"><button type="button" class="btn btn-soft" (click)="sendOtp()">Send verification code</button><span class="muted">10-minute code</span></div>
+    @if (sent) { <div class="field"><label>OTP</label><input formControlName="otp" inputmode="numeric" placeholder="6-digit code"></div> }
+    @if (message) { <p class="success">{{message}}</p> } @if (error) { <p class="error">{{error}}</p> }
+    <button class="btn btn-primary" style="width:100%" [disabled]="loading || !sent">{{loading ? 'Creating account…' : 'Create patient account'}}</button>
+  </form>
+</section>

@@ -1,0 +1,10 @@
+<section class="form-shell">
+  <p class="eyebrow">Welcome back</p><h2>Sign in to HealthFlow</h2><p class="muted">Use your patient, doctor, or admin credentials.</p>
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <div class="field"><label>Email</label><input type="email" formControlName="email" placeholder="you@example.com"></div>
+    <div class="field"><label>Password</label><input type="password" formControlName="password" placeholder="••••••••"></div>
+    @if (error) { <p class="error">{{error}}</p> }
+    <button class="btn btn-primary" style="width:100%" [disabled]="loading">{{loading ? 'Signing in…' : 'Sign in'}}</button>
+  </form>
+  <p class="muted">New patient? <a routerLink="/register">Create an account</a></p>
+</section>

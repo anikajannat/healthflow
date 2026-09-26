@@ -1,0 +1,79 @@
+<section class="doctor-hero">
+  <div class="container">
+    <p class="eyebrow">Doctor consultation</p>
+    <div class="hero-row">
+      <div>
+        <h1>Find a doctor who fits your needs.</h1>
+        <p>Search by doctor, specialty or clinical interest. Review the doctor’s profile, then choose an upcoming schedule and a 20-minute time slot.</p>
+      </div>
+      <div class="match-count"><strong>{{ filteredDoctors.length }}</strong><span>matches found</span></div>
+    </div>
+
+    <div class="finder-panel">
+      <div class="search-wide">
+        <span class="search-icon">⌕</span>
+        <input [(ngModel)]="keyword" placeholder="Search doctor name, specialty or qualification...">
+      </div>
+      <div class="finder-grid">
+        <label>
+          <span>Select doctor</span>
+          <select [(ngModel)]="selectedDoctorId">
+            <option value="">All doctors</option>
+            @for (d of doctors; track d.id) { <option [value]="d.id">{{ d.name }}</option> }
+          </select>
+        </label>
+        <label>
+          <span>Specialty</span>
+          <select [(ngModel)]="specialization">
+            <option value="">All specialties</option>
+            @for (s of specializations; track s) { <option [value]="s">{{ s }}</option> }
+          </select>
+        </label>
+        <button class="reset-btn" type="button" (click)="reset()">Reset filters</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section doctor-results">
+  <div class="container">
+    @if (loading) { <div class="state-card">Loading approved doctors…</div> }
+    @if (error) { <div class="state-card error">{{ error }}</div> }
+    @if (!loading && !filteredDoctors.length) {
+      <div class="state-card"><h3>No doctor matched your search.</h3><p class="muted">Try another doctor name or specialty.</p></div>
+    }
+
+    <div class="doctor-list">
+      @for (d of filteredDoctors; track d.id) {
+        <article class="doctor-card">
+          <div class="portrait-wrap">
+            @if (d.imageUrl) { <img [src]="d.imageUrl" [alt]="d.name"> }
+            @else { <div class="portrait-placeholder">{{ initials(d.name) }}</div> }
+            <a class="view-more" [routerLink]="['/doctors', d.id]">View profile</a>
+          </div>
+
+          <div class="doctor-main">
+            <p class="specialty">{{ d.specialization }}</p>
+            <h2>{{ d.name }}</h2>
+            <p class="qualification">{{ d.qualifications || 'Verified healthcare professional' }}</p>
+            <div class="meta-row">
+              <span>{{ d.experienceYears }} years experience</span>
+              <span>★ {{ (d.averageRating || 0).toFixed(1) }} ({{ d.reviewCount || 0 }})</span>
+            </div>
+            <p class="bio">{{ d.bio || 'Approved clinician available for HealthFlow consultations.' }}</p>
+            <div class="fee-line"><span>Consultation fee</span><strong>৳{{ d.consultationFee }}</strong></div>
+          </div>
+
+          <aside class="booking-side">
+            <div class="schedule-note">
+              <span class="calendar-icon">▣</span>
+              <div><small>Schedule</small><strong>View upcoming dates & time slots</strong></div>
+            </div>
+            <div class="secure-note">✓ 20-minute slots<br>✓ Secure patient booking<br>✓ bKash checkout</div>
+            <a class="book-btn" [routerLink]="['/book', d.id]">Book an Appointment</a>
+          </aside>
+        </article>
+      }
+    </div>
+  </div>
+</section>

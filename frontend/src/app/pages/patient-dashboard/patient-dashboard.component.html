@@ -1,0 +1,13 @@
+<section class="section"><div class="container">
+  <div class="page-head"><div><p class="eyebrow">Patient portal</p><h2>Hello, {{auth.user()?.name}}.</h2><p class="muted">Appointments, consultation links and prescriptions stay together here.</p></div><a class="btn btn-primary" routerLink="/doctors">Book appointment</a></div>
+  @if(message){<p class="success">{{message}}</p>} @if(error){<p class="error">{{error}}</p>}
+  <div class="grid grid-2">
+    @for(a of items;track a.id){<article class="card">
+      <div class="row" style="justify-content:space-between"><span class="badge">{{a.status}}</span><b>Serial #{{a.serialNumber}}</b></div>
+      <h3>{{a.doctor}}</h3><p class="muted">{{a.specialization}}</p><p>{{a.appointmentStartUtc | date:'medium'}}</p>
+      @if(a.payment){<p class="muted"><b>{{a.payment.provider || 'Payment'}}</b> · ৳{{a.payment.amount}} · {{a.payment.status}}<br><small>Txn: {{a.payment.transactionId}}</small></p>}
+      <div class="row">@if(a.status==='Booked'){<button class="btn btn-danger" (click)="cancel(a.id)">Cancel</button>} @if(a.status==='Booked'||a.status==='Ongoing'){<a class="btn btn-soft" [href]="a.meetLink" target="_blank">Join consultation</a>}</div>
+      @if(a.prescription){<hr><strong>Prescription</strong><p><b>Findings:</b> {{a.prescription.findings}}</p><p><b>Medicines:</b> {{a.prescription.medicines}}</p>}
+    </article>}
+  </div>
+</div></section>

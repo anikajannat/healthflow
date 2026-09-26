@@ -1,0 +1,91 @@
+<section class="booking-page">
+  <div class="container">
+    <div class="booking-head">
+      <div><p class="eyebrow">Appointment booking</p><h1>Choose a schedule and confirm your visit.</h1></div>
+      <a class="btn btn-soft" routerLink="/doctors">← Back to doctors</a>
+    </div>
+
+    @if (loading) { <div class="empty-card">Loading upcoming schedules…</div> }
+    @if (!loading && doctor) {
+      <div class="booking-layout">
+        <aside class="doctor-summary">
+          <div class="doctor-avatar">{{ doctor.name.slice(0,2).toUpperCase() }}</div>
+          <p class="specialty">{{ doctor.specialization }}</p>
+          <h2>{{ doctor.name }}</h2>
+          <p>{{ doctor.qualifications || 'Verified HealthFlow clinician' }}</p>
+          <p class="doctor-bio">{{ doctor.bio || 'Patient-focused consultation and follow-up care.' }}</p>
+          <div class="summary-line"><span>Experience</span><strong>{{ doctor.experienceYears }} years</strong></div>
+          <div class="summary-line"><span>Rating</span><strong>★ {{ (doctor.averageRating || 0).toFixed(1) }}</strong></div>
+          <div class="summary-line fee"><span>Consultation fee</span><strong>৳{{ doctor.consultationFee }}</strong></div>
+        </aside>
+
+        <main class="booking-card">
+          <div class="stepper">
+            <div [class.active]="step>=1"><span>1</span><b>Schedule</b></div>
+            <i></i><div [class.active]="step>=2"><span>2</span><b>Details</b></div>
+            <i></i><div [class.active]="step>=3"><span>3</span><b>Payment</b></div>
+          </div>
+
+          @if (step === 1) {
+            <section>
+              <p class="eyebrow">Select appointment date</p>
+              @if (!dates.length) { <div class="empty-card"><h3>No published schedule available.</h3><p>Ask the doctor to publish a schedule, or choose another clinician.</p></div> }
+              <div class="date-tabs">
+                @for (date of dates; track date) { <button [class.active]="selectedDate===date" (click)="selectDate(date)">{{ dateLabel(date) }}</button> }
+              </div>
+              @if (selectedSchedule) {
+                <div class="schedule-strip"><div><span>Consultation window</span><strong>{{ selectedSchedule.startTime }} – {{ selectedSchedule.endTime }}</strong></div><b>{{ selectedSchedule.availableSlots }} available slots</b></div>
+                <p class="slot-title">Choose a 20-minute slot</p>
+                <div class="slots">
+                  @for (slot of slots(selectedSchedule); track slot.index) {
+                    <button [disabled]="slot.unavailable" [class.active]="selectedSlot===slot.index" (click)="chooseSlot(slot.index)">{{ slot.label }}</button>
+                  }
+                </div>
+              }
+            </section>
+          }
+
+          @if (step === 2) {
+            <section>
+              <p class="eyebrow">Visit details</p><h2>Tell the doctor what you need help with.</h2>
+              <div class="appointment-recap"><span>{{ dateLabel(selectedDate) }}</span><strong>{{ selectedSlotLabel() }}</strong><span>{{ doctor.name }}</span></div>
+              <label class="form-label">Reason for visit <small>(optional)</small><textarea rows="5" [(ngModel)]="reason" placeholder="Example: chest discomfort for two days, follow-up, skin rash..."></textarea></label>
+              @if (!auth.isLoggedIn()) { <div class="login-note">You need a patient account to complete the booking. <a routerLink="/login">Log in</a> or <a routerLink="/register">create an account</a>.</div> }
+            </section>
+          }
+
+          @if (step === 3) {
+            <section>
+              <p class="eyebrow">Secure payment</p><h2>Pay with bKash and confirm your appointment.</h2>
+              <div class="payment-grid">
+                <div class="payment-method active"><div class="bkash-mark">bKash</div><div><strong>bKash payment</strong><span>Mock/sandbox checkout for development</span></div><span class="check">✓</span></div>
+                <div class="payment-summary"><div><span>Doctor fee</span><strong>৳{{ doctor.consultationFee }}</strong></div><div><span>Platform fee</span><strong>৳0</strong></div><hr><div class="total"><span>Total</span><strong>৳{{ doctor.consultationFee }}</strong></div></div>
+              </div>
+              <label class="form-label">bKash mobile number<input [(ngModel)]="bkashNumber" maxlength="11" inputmode="numeric" placeholder="01XXXXXXXXX"></label>
+              <label class="agree"><input type="checkbox" [(ngModel)]="agree"><span>I confirm the selected appointment time and authorize the mock bKash payment.</span></label>
+              <div class="sandbox-note"><strong>Development note:</strong> this project uses a bKash-style mock payment so you can test the full booking flow without merchant credentials. Live bKash requires an approved merchant account and official gateway credentials.</div>
+            </section>
+          }
+
+          @if (step === 4 && success) {
+            <section class="success-panel">
+              <div class="success-icon">✓</div><p class="eyebrow">Booking confirmed</p><h2>Your appointment is ready.</h2>
+              <p>We created your appointment and recorded the payment.</p>
+              <div class="confirmation-card"><div><span>Serial</span><strong>#{{ success.serialNumber }}</strong></div><div><span>Transaction</span><strong>{{ success.payment.transactionId }}</strong></div><div><span>Paid</span><strong>৳{{ success.payment.amount }}</strong></div></div>
+              <div class="success-actions"><a class="btn btn-primary" routerLink="/patient">Open patient dashboard</a><a class="btn btn-soft" routerLink="/doctors">Book another doctor</a></div>
+            </section>
+          }
+
+          @if (error) { <p class="error booking-error">{{ error }}</p> }
+          @if (step < 4) {
+            <div class="footer-actions">
+              @if (step > 1) { <button class="btn btn-soft" (click)="back()">Back</button> }
+              @if (step < 3) { <button class="btn btn-primary" (click)="next()">Continue</button> }
+              @if (step === 3) { <button class="pay-btn" [disabled]="paying" (click)="payAndBook()">{{ paying ? 'Processing…' : 'Pay ৳' + doctor.consultationFee + ' & confirm' }}</button> }
+            </div>
+          }
+        </main>
+      </div>
+    }
+  </div>
+</section>

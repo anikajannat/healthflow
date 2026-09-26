@@ -1,0 +1,43 @@
+<header class="topbar">
+  <a class="brand" routerLink="/">
+    <span class="brand-mark">✚</span><span>HealthFlow</span>
+  </a>
+  <nav>
+    <a routerLink="/">Home</a>
+
+    <div class="nav-dropdown">
+      <button class="dropdown-trigger" type="button">
+        Our Services <span class="dropdown-arrow">⌄</span>
+      </button>
+      <div class="dropdown-menu">
+        <a routerLink="/services/family-physician">Family Physician and First Aid Care</a>
+        <a routerLink="/services/specialist-consultations">Specialist Doctor Consultations</a>
+        <a routerLink="/services/health-wellness">Health and Wellness <span>›</span></a>
+        <a routerLink="/services/dental-care">Dental Care</a>
+        <a routerLink="/services/diagnostics">Diagnostics</a>
+        <a routerLink="/services/pharmacy">Pharmacy</a>
+      </div>
+    </div>
+
+    <a routerLink="/doctors">Doctors</a>
+    <a routerLink="/apply-doctor">For Doctors</a>
+    @if (auth.user()) {
+      <a [routerLink]="dashboard()">Dashboard</a>
+      <a routerLink="/profile">Profile</a>
+      <button class="link-button" (click)="auth.logout()">Logout</button>
+    } @else {
+      <a routerLink="/login">Login</a>
+      <a class="nav-cta" routerLink="/register">Get Started</a>
+    }
+  </nav>
+</header>
+
+<main><router-outlet /></main>
+
+<footer>
+  <div>
+    <strong>HealthFlow</strong>
+    <p>Simple, human-centered healthcare scheduling.</p>
+  </div>
+  <p>© {{ year }} HealthFlow. Demo project.</p>
+</footer>
